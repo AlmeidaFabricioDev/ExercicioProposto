@@ -55,7 +55,7 @@ namespace ExercicioProposto
 
             */
 
-            
+
 
 
             String diretorioFonte1 = @"c:\tmp";
@@ -70,36 +70,6 @@ namespace ExercicioProposto
 
             using (StreamWriter escritorArquivo = File.AppendText(arquivoDestino1))
                 for (int i = 0; i < 2; i++)
-            {
-                Console.WriteLine("nome : ");
-                string nome = Console.ReadLine();
-                Console.WriteLine("Preco : ");
-                double preco = double.Parse(Console.ReadLine(), CultureInfo.InvariantCulture);
-                Console.WriteLine("Quantidade : ");
-                int qtd = int.Parse(Console.ReadLine());
-                Produto prod = new Produto(nome, preco, qtd);
-                escritorArquivo.WriteLine(prod.Nome + "," + prod.Preco.ToString("f2", CultureInfo.InvariantCulture)+","+prod.Qtd.ToString());
-
-            }
-
-            Console.WriteLine();
-            StreamReader leitor = new StreamReader(@"c:\tmp\csc\ItensVendidos.csv");
-            string line = leitor.ReadLine();
-            while (line != null)
-            {
-                Console.WriteLine(line);
-                line = leitor.ReadLine();
-            }
-            leitor.Close();
-
-            /* ---------------------------------   */
-
-            String diretorioFonte2 = @"c:\tmp\csc";
-            string diretorioDestino2 = diretorioFonte2 + @"\destino";
-            string arquivoDestino2 = diretorioDestino2 + @"\Resumo.csv";
-
-            using (StreamWriter escritorArquivo2 = File.AppendText(arquivoDestino2))
-                for (int i = 0; i < 2; i++)
                 {
                     Console.WriteLine("nome : ");
                     string nome = Console.ReadLine();
@@ -108,25 +78,58 @@ namespace ExercicioProposto
                     Console.WriteLine("Quantidade : ");
                     int qtd = int.Parse(Console.ReadLine());
                     Produto prod = new Produto(nome, preco, qtd);
-                    escritorArquivo2.WriteLine(prod.Nome + "," + prod.Preco.ToString("f2", CultureInfo.InvariantCulture) + "," + prod.Qtd.ToString());
+                    escritorArquivo.WriteLine(prod.Nome + "," + prod.Preco.ToString("f2", CultureInfo.InvariantCulture) + "," + prod.Qtd.ToString());
 
                 }
+
+            Console.WriteLine();
+            StreamReader leitor1 = new StreamReader(@"c:\tmp\csc\ItensVendidos.csv");
+            string line1 = leitor1.ReadLine();
+            while (line1 != null)
+            {
+                Console.WriteLine(line1);
+                line1 = leitor1.ReadLine();
+            }
+            leitor1.Close();
+
+            /* ---------------------------------   */
+
+            Console.Write("Informe o caminho e o nome do arquivo CSV: ");
+            String arquivoFonte = Console.ReadLine();
+            string[] linhas = File.ReadAllLines(arquivoFonte);
+
+            String diretorioFonte2 = @"c:\tmp\csc";
+            string diretorioDestino2 = diretorioFonte2 + @"\destino";
+            string arquivoDestino2 = diretorioDestino2 + @"\resumo.csv";
+            Directory.CreateDirectory(diretorioDestino2);
+
+            using (StreamWriter escritorArquivo2 = File.AppendText(arquivoDestino2))
+                foreach (var item in linhas)
+                {
+                    string[] campos = item.Split(',');
+                    string nome = campos[0];
+                    double preco = double.Parse(campos[1], CultureInfo.InvariantCulture);
+                    int quantidade = int.Parse(campos[2]);
+
+                    Produto prod = new Produto(nome, preco, quantidade);
+
+                    escritorArquivo2.WriteLine(prod.Nome + "," + prod.Totalizar().ToString("f2", CultureInfo.InvariantCulture));
+                }
+
+            Console.WriteLine();
+            StreamReader leitor2 = new StreamReader(@"c:\tmp\csc\destino\resumo.csv");
+            string line2 = leitor2.ReadLine();
+            while (line2 != null)
+            {
+                Console.WriteLine(line2);
+                line2 = leitor2.ReadLine();
+            }
+            leitor2.Close();
 
 
 
 
         }
-
-
-
-
-
-
-
-
-
-
-
 
     }
 }
